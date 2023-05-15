@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <title>A4 INTRODUCE</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;500;600;700;900&display=swap"
+        rel="stylesheet" />
+    <style>
+        * {
+            font-family: "Noto Serif KR", serif;
+        }
+
+        .banner {
+            width: 100%;
+            height: 300px;
+
+            background-color: rgb(255, 166, 0);
+            background-position: center 30%;
+            background-size: cover;
+
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .postbutton {
+            float: right;
+            margin-right: 20px;
+        }
+
+        .postbtn>button {
+            margin-right: 10px;
+        }
+
+        .postbox {
+            width: 95%;
+            max-width: 900px;
+            margin: 20px auto 0px auto;
+            padding: 20px;
+            box-shadow: 0px 0px 3px 0px gray;
+            display: none;
+        }
+
+        .postbtn {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mypost {
+            width: 95%;
+            max-width: 1000px;
+            margin: 20px auto 20px auto;
+
+            box-shadow: 0px 0px 3px 0px black;
+            padding: 20px;
+        }
+
+        .teamcard {
+            margin: 20px auto 0px auto;
+            width: 95%;
+            max-width:1500px;
+        }
+
+        .mypost>button {
+            margin-top: 15px;
+        }
+
+        .mycards {
+            width: 95%;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .mycards>.card {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            show_members();
+        });
+        
+        function posting() {
+            let name = $('#username').val()
+            let mbti = $('#usermbti').val()
+            let intro = $('#userintro').val()
+            let adv = $('#useradv').val()
+            let style = $('#userstyle').val()
+            let address = $('#useraddr').val()
+
+            let formData = new FormData();
+            formData.append("name_give", name);
+            formData.append("mbti_give", mbti);
+            formData.append("intro_give", intro);
+            formData.append("adv_give", adv);
+            formData.append("style_give", style);
+            formData.append("address_give", address);
+
+            fetch('/team', { method: "POST", body: formData, }).then((res) => res.json()).then((data) => {
+                alert(data['msg'])
+                window.location.reload()
+            });
+        }
+
+        function show_members(){           
+            fetch('/team').then((res) => res.json()).then((data) => {
+                let rows = data['result']
+                console.log(data)
+                $('#card').empty()
+                rows.forEach((a) => {
+                    let name = a['name']
+                    let mbti = a['mbti']
+                    let intro = a['intro']
+                    let adv = a['adv']
+                    let style = a['style']
+                    let address = a['address']
+
+                    let temp_html = `<div class="card">
+                                        <a href="/song"><img
+                                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSs3MdaLzqr9nw5kGjo3mUqrT1lnJc7a6kVPg&usqp=CAU"
+                                                class="card-img-top"></a>
+                                        <div class="card-body">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${name}</h5>
+                                                <p class="card-text">${intro}</p>
+                                            </div>
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item">${adv}</li>
+                                                <li class="list-group-item">${mbti}</li>
+                                                <li class="list-group-item">${style}</li>
+                                            </ul>
+                                            <div class="card-body">
+                                                <a href="${address}" class="card-link">블로그</a>
+                                                <a href="https://www.instagram.com/byeongmin77/" class="card-link">인스타그램</a>
+                                            </div>
+                                        </div>
+                                    </div>`
+                    
+                    $('#comment-list').append(temp_html)
+                })
+            })
+        }
+        function save_comment() {
+
+        }
+
+        function open_box() {
+            $('#post-box').show()
+        }
+        function close_box() {
+            $('#post-box').hide()
+        }
+    </script>
+
+</head>
+
+<body>
+    <div class="banner">
+        <h1>A4 TEAM INTRODUCE</h1>
+    </div>
+
+
+
+    <div>
+        <button class="postbutton" onclick="open_box()">ㅇ</button>
+    </div>
+
+
+
+    <div id="post-box" class="postbox">
+        <div class="input-group mb-3">
+            <span class="input-group-text">이름</span>
+            <input type="text" class="form-control" id="username" placeholder="Username">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">MBTI</span>
+            <input type="text" class="form-control" id="usermbti" placeholder="MBTI">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">자기소개</span>
+            <input type="text" class="form-control" id="userintro" placeholder="간단한 자기소개를 입력해주세요">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">장점</span>
+            <input type="text" class="form-control" id="useradv" placeholder="장점을 입력해주세요">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">협업스타일</span>
+            <input type="text" class="form-control" id="userstyle" placeholder="협업스타일을 입력해주세요">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">블로그주소</span>
+            <input type="text" class="form-control" id="useraddr" placeholder="123@gmail.com">
+        </div>
+        <div class="postbtn">
+            <button onclick="posting()">제출</button>
+            <button onclick="close_box()">닫기</button>
+        </div>
+
+
+    </div>
+
+    <div class="mypost">
+        <p class="text-center">A4 조원들을 소개합니다</p>
+    </div>
+   
+
+
+    <div class="teamcard">
+        <div class="row row-cols-1 row-cols-md-5 g-5">
+            <div class="col">
+                <div class="card">
+                    <a href="/song"><img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSs3MdaLzqr9nw5kGjo3mUqrT1lnJc7a6kVPg&usqp=CAU"
+                            class="card-img-top"></a>
+                    <div class="card-body">
+                        <div class="card-body">
+                            <h5 class="card-title">이름</h5>
+                            <p class="card-text">자기소개</p>
+                          </div>
+                          <ul class="list-group list-group-flush">
+                            <li class="list-group-item">장점</li>
+                            <li class="list-group-item">MBTI</li>
+                            <li class="list-group-item">협업스타일</li>
+                          </ul>
+                          <div class="card-body">
+                            <a href="#" class="card-link">블로그</a>
+                            <a href="#" class="card-link">인스타그램</a>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <a href="/song"><img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSs3MdaLzqr9nw5kGjo3mUqrT1lnJc7a6kVPg&usqp=CAU"
+                            class="card-img-top"></a>
+                    <div class="card-body">
+                        <div class="card-body">
+                            <h5 class="card-title">이름</h5>
+                            <p class="card-text">자기소개</p>
+                          </div>
+                          <ul class="list-group list-group-flush">
+                            <li class="list-group-item">장점</li>
+                            <li class="list-group-item">MBTI</li>
+                            <li class="list-group-item">협업스타일</li>
+                          </ul>
+                          <div class="card-body">
+                            <a href="#" class="card-link">블로그</a>
+                            <a href="#" class="card-link">인스타그램</a>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <a href="/song"><img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSs3MdaLzqr9nw5kGjo3mUqrT1lnJc7a6kVPg&usqp=CAU"
+                            class="card-img-top"></a>
+                    <div class="card-body">
+                        <div class="card-body">
+                            <h5 class="card-title">이름</h5>
+                            <p class="card-text">자기소개</p>
+                          </div>
+                          <ul class="list-group list-group-flush">
+                            <li class="list-group-item">장점</li>
+                            <li class="list-group-item">MBTI</li>
+                            <li class="list-group-item">협업스타일</li>
+                          </ul>
+                          <div class="card-body">
+                            <a href="#" class="card-link">블로그</a>
+                            <a href="#" class="card-link">인스타그램</a>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <a href="/song"><img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSs3MdaLzqr9nw5kGjo3mUqrT1lnJc7a6kVPg&usqp=CAU"
+                            class="card-img-top"></a>
+                    <div class="card-body">
+                        <div class="card-body">
+                            <h5 class="card-title">이름</h5>
+                            <p class="card-text">자기소개</p>
+                          </div>
+                          <ul class="list-group list-group-flush">
+                            <li class="list-group-item">장점</li>
+                            <li class="list-group-item">MBTI</li>
+                            <li class="list-group-item">협업스타일</li>
+                          </ul>
+                          <div class="card-body">
+                            <a href="#" class="card-link">블로그</a>
+                            <a href="#" class="card-link">인스타그램</a>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <a href="/song"><img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSs3MdaLzqr9nw5kGjo3mUqrT1lnJc7a6kVPg&usqp=CAU"
+                            class="card-img-top"></a>
+                    <div class="card-body">
+                        <div class="card-body">
+                            <h5 class="card-title">이름</h5>
+                            <p class="card-text">자기소개</p>
+                          </div>
+                          <ul class="list-group list-group-flush">
+                            <li class="list-group-item">장점</li>
+                            <li class="list-group-item">MBTI</li>
+                            <li class="list-group-item">협업스타일</li>
+                          </ul>
+                          <div class="card-body">
+                            <a href="#" class="card-link">블로그</a>
+                            <a href="#" class="card-link">인스타그램</a>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>
